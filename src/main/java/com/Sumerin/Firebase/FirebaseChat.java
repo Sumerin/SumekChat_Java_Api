@@ -7,6 +7,7 @@ package com.Sumerin.Firebase;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ import net.thegreshams.firebase4j.service.Firebase;
 public class FirebaseChat {
 
     private final String url = "https://sumektest.firebaseio.com/";
+    private final String room = "Chat/";
     private Firebase db;
     private int msgIterator;
 
@@ -38,33 +40,34 @@ public class FirebaseChat {
           }
     }
 
-    public int addMessage(String username, String message)
+    public int addMessage(Map<String,Object> data)
     {
         try
           {
-            Map<String, Object> data = new LinkedHashMap<String, Object>();
-            data.put("username", username);
-            data.put("message", message);
-
-            StringBuilder path = new StringBuilder("Chat/");
+            StringBuilder path = new StringBuilder(room);
             path.append(msgIterator++);
             
             FirebaseResponse response = db.put(path.toString(), data);
+            return response.getCode();
           }
-        catch (JacksonUtilityException ex)
+        catch (JacksonUtilityException | FirebaseException | UnsupportedEncodingException ex)
           {
             Logger.getLogger(FirebaseChat.class.getName()).log(Level.SEVERE, null, ex);
           }
-        catch (FirebaseException ex)
-          {
-            Logger.getLogger(FirebaseChat.class.getName()).log(Level.SEVERE, null, ex);
-          }
-        catch (UnsupportedEncodingException ex)
-          {
-            Logger.getLogger(FirebaseChat.class.getName()).log(Level.SEVERE, null, ex);
-          }
-        return 200;
+        return 400;
     }
-    
-    
+            
+    public List<Message> getMessages()
+    {
+        try
+          {
+            FirebaseResponse response = db.get(room);
+            return JsonConverter.JsonStringToListMessage(response.getRawBody());
+          }
+        catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException ex)
+          {
+            Logger.getLogger(FirebaseChat.class.getName()).log(Level.SEVERE, null, ex);
+          }
+        return null;
+    }
 }
