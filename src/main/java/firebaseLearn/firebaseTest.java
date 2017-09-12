@@ -6,15 +6,6 @@
 package firebaseLearn;
 
 import com.Sumerin.Firebase.FirebaseChat;
-import java.io.UnsupportedEncodingException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.error.JacksonUtilityException;
-import net.thegreshams.firebase4j.model.FirebaseResponse;
-import net.thegreshams.firebase4j.service.Firebase;
 
 /**
  *
@@ -25,7 +16,8 @@ public class firebaseTest {
 
     public static void main()
     {
-        FirebaseChat t = new FirebaseChat();
        
+            FirebaseChat t = new FirebaseChat();
+            
     }
 }
