@@ -23,15 +23,21 @@ import net.thegreshams.firebase4j.service.Firebase;
 public class FirebaseChat {
 
     private final String url = "https://sumektest.firebaseio.com/";
-    private final String room = "Chat/";
+    private final String room;
     private Firebase db;
     private int msgIterator;
 
-    public FirebaseChat()
+    public FirebaseChat(int room)
     {
+        StringBuilder pathBuilder = new StringBuilder("Chat/Rooms/");
+        pathBuilder.append(room);
+        pathBuilder.append("/");
+
+        this.room = pathBuilder.toString();
         this.msgIterator = 1;
         try
           {
+
             this.db = new Firebase(url);
           }
         catch (FirebaseException ex)
@@ -40,13 +46,13 @@ public class FirebaseChat {
           }
     }
 
-    public int addMessage(Map<String,Object> data)
+    public int addMessage(Map<String, Object> data)
     {
         try
           {
             StringBuilder path = new StringBuilder(room);
             path.append(msgIterator++);
-            
+
             FirebaseResponse response = db.put(path.toString(), data);
             return response.getCode();
           }
@@ -56,7 +62,7 @@ public class FirebaseChat {
           }
         return 400;
     }
-            
+
     public List<Message> getMessages()
     {
         try

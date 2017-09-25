@@ -17,11 +17,14 @@ import lombok.Getter;
 public class Message {
 
     @Getter
-    final private String username;
+    private String username;
 
     @Getter
-    final private String text;
+    private String text;
 
+    public Message()
+    {}
+    
     public Message(String username, String text)
     {
         this.username = username;
