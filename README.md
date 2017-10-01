@@ -3,7 +3,7 @@
 Java Chat Api with firebase as database.
 Builded with Maven.
 
-[Server works on])http://localhost:8080
+[Server works on](http://localhost:8080)
 
 ##Postman Query Examples:
 x-Room number
