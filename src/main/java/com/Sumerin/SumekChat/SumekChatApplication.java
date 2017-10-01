@@ -11,10 +11,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SumekChatApplication {
     
+    final static  String path = "/home/sumek/Downloads/private_firebase.json";
+    
     public static void main(String[] args) throws IOException
     {
         
-        initializeFirebaseConnection("/home/sumek/Downloads/private_firebase.json");
+        initializeFirebaseConnection(path);
         SpringApplication.run(SumekChatApplication.class, args);
 
 
