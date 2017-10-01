@@ -4,9 +4,18 @@ Java Chat Api with firebase as database.
 Builded with Maven.
 
 [Server works on](http://localhost:8080)
+using Apache Tomcat 8.0.27.0
+
+##Wake up server
+
+### Main Class Variable
+
+path - path to the private_key generated from firebase 
+[How to generate private key](https://firebase.google.com/docs/admin/setup)
+
 
 ## Postman Query Examples:
-x-Room number
+x - Room number
 
 ### Get:
 Url:http://localhost:8080/Chat/x
