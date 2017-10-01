@@ -3,9 +3,7 @@
 Java Chat Api with firebase as database.
 Builded with Maven.
 
-[Server works on](http://localhost:8080)
-
-using Apache Tomcat 8.0.27.0
+[Server works on](http://localhost:8080)  using Apache Tomcat 8.0.27.0
 
 ##Wake up server
 
