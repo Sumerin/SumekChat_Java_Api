@@ -5,16 +5,11 @@
  */
 package com.Sumerin.Firebase;
 
-import java.io.UnsupportedEncodingException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.firebase.database.*;
+import com.google.firebase.tasks.OnSuccessListener;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.thegreshams.firebase4j.error.FirebaseException;
-import net.thegreshams.firebase4j.error.JacksonUtilityException;
-import net.thegreshams.firebase4j.model.FirebaseResponse;
-import net.thegreshams.firebase4j.service.Firebase;
+import com.google.firebase.tasks.*;
 
 /**
  *
@@ -22,58 +17,52 @@ import net.thegreshams.firebase4j.service.Firebase;
  */
 public class FirebaseChat {
 
-    private final String url = "https://sumektest.firebaseio.com/";
-    private final String room;
-    private Firebase db;
-    private int msgIterator;
+    private DatabaseReference dbChatRoom;
+    private List<Message> messagesOnServer;
 
     public FirebaseChat(int room)
     {
         StringBuilder pathBuilder = new StringBuilder("Chat/Rooms/");
         pathBuilder.append(room);
-        pathBuilder.append("/");
+        messagesOnServer = Collections.synchronizedList(new ArrayList<>());
 
-        this.room = pathBuilder.toString();
-        this.msgIterator = 1;
-        try
-          {
+        dbChatRoom = FirebaseDatabase.getInstance().getReference(pathBuilder.toString());
+        dbChatRoom.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot ds)
+            {
+                Map<Object, Message> msgs = (Map<Object, Message>) ds.getValue();
+                messagesOnServer = new ArrayList<>(msgs.values());
+            }
 
-            this.db = new Firebase(url);
-          }
-        catch (FirebaseException ex)
-          {
-            Logger.getLogger(FirebaseChat.class.getName()).log(Level.SEVERE, null, ex);
-          }
+            @Override
+            public void onCancelled(DatabaseError de)
+            {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+
     }
 
-    public int addMessage(Map<String, Object> data)
+    public void addMessage(Message data) throws InterruptedException
     {
-        try
+        Object lock = new Object();
+        synchronized (lock)
           {
-            StringBuilder path = new StringBuilder(room);
-            path.append(msgIterator++);
+            dbChatRoom.push().setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void t)
+                {
+                    lock.notify();
+                }
+            });
+            lock.wait(1000);
 
-            FirebaseResponse response = db.put(path.toString(), data);
-            return response.getCode();
           }
-        catch (JacksonUtilityException | FirebaseException | UnsupportedEncodingException ex)
-          {
-            Logger.getLogger(FirebaseChat.class.getName()).log(Level.SEVERE, null, ex);
-          }
-        return 400;
     }
 
     public List<Message> getMessages()
     {
-        try
-          {
-            FirebaseResponse response = db.get(room);
-            return JsonConverter.JsonStringToListMessage(response.getRawBody());
-          }
-        catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException ex)
-          {
-            Logger.getLogger(FirebaseChat.class.getName()).log(Level.SEVERE, null, ex);
-          }
-        return null;
+        return messagesOnServer;
     }
 }

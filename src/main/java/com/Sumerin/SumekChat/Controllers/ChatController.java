@@ -29,17 +29,24 @@ public class ChatController {
     
     
     @GetMapping("/{id}")
-    public List<Message> listMessage(@PathVariable int id)
+    public ResponseEntity<List<Message>> listMessage(@PathVariable int id)
     {
-        return chat[id].getMessages();
+        return new ResponseEntity<>(chat[id].getMessages(),HttpStatus.ACCEPTED);
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<Void> putMessage(@PathVariable int id, @RequestBody Message msg)
     {
-     
-        chat[id].addMessage(msg.toEnvelope());
-        return new ResponseEntity(HttpStatus.CREATED);
+        try
+          {
+            chat[id].addMessage(msg);
+            return new ResponseEntity(HttpStatus.CREATED);
+          }
+        catch (InterruptedException ex)
+          {
+            return new ResponseEntity(HttpStatus.EXPECTATION_FAILED);
+          }
+        
     }
     
 }
