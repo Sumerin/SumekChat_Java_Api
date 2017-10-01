@@ -20,7 +20,7 @@ Url:http://localhost:8080/Chat/x
  Required:
 * Basic Auth (user, password)
 * Xrsf Tokken ( example Tokken: 5185ead1-8630-470e-9e9b-8bae9b8d16f3)
-Body:
+* Body:
 ```
 {
   "username":"xxx",
