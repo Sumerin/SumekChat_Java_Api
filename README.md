@@ -5,7 +5,7 @@ Builded with Maven.
 
 [Server works on](http://localhost:8080) </br> using Apache Tomcat 8.0.27.0
 
-##Wake up server
+## Wake up server
 
 ### Main Class Variable
 
